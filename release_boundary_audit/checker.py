@@ -1,23 +1,28 @@
 from __future__ import annotations
 
 import re
-import tomllib
 from pathlib import Path
 
 from .model import AuditIssue, AuditResult, ReleaseEntry
 
 
 VERSION = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
+PROJECT_VERSION = re.compile(r'(?m)^version\s*=\s*"([^"]+)"\s*$')
 HEADING = re.compile(r"^## \[([0-9]+\.[0-9]+\.[0-9]+)\] -- ([0-9]{4}-[0-9]{2}-[0-9]{2})$")
+
+
+def _project_version(text: str) -> str:
+    match = PROJECT_VERSION.search(text)
+    return match.group(1) if match else ""
 
 
 def inspect_repository(root: Path) -> AuditResult:
     root = root.resolve()
     issues: list[AuditIssue] = []
     try:
-        metadata = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
-        project_version = str(metadata["project"]["version"])
-    except (OSError, KeyError, TypeError, ValueError, tomllib.TOMLDecodeError) as error:
+        metadata_text = (root / "pyproject.toml").read_text(encoding="utf-8")
+        project_version = _project_version(metadata_text)
+    except OSError as error:
         return AuditResult(root, "", (), (AuditIssue("metadata", f"cannot read project version: {error}"),))
 
     if not VERSION.fullmatch(project_version):

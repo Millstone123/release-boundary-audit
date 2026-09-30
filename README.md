@@ -8,21 +8,17 @@ duplicate versions, mismatched latest versions, and out-of-order release dates.
 
 ## Setup
 
-```sh
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -e .
-```
+No package installation is required. Use the system `python3` from the
+repository root.
 
 ## Check a repository
 
 ```sh
-release-boundary-audit
-python3 -m release_boundary_audit
+PYTHONPATH=. python3 -m release_boundary_audit
 ```
 
-Both commands print a plain-text audit report. The command exits with status 1
-when the release history is inconsistent.
+The command prints a plain-text audit report and exits with status 1 when the
+release history is inconsistent.
 
 ## Verify
 
