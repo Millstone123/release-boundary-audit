@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "release-boundary-audit"
+version = "1.2.0"
+description = "Audit semantic release boundaries in project metadata"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+release-boundary-audit = "release_boundary_audit.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["release_boundary_audit*"]
